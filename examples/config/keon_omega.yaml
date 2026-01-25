@@ -1,0 +1,97 @@
+# ==============================================================================
+# KEON + OMEGA Integration Configuration Stub
+# ==============================================================================
+#
+# STATUS: SHELL - Ready for Keon evidence wiring
+# MERGE AUTHORITY: None until Gemini clears Campaign II
+#
+# This configuration file defines the integration seams between OMEGA SDK
+# and Keon Core. All values are stubs that will be wired to verified truth
+# once Keon Control evidence browser exists.
+#
+# IMPORTANT: This file prepares the world for Keon. It does NOT:
+#   - Define trust semantics
+#   - Implement evidence validation
+#   - Create governance logic
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# OMEGA Federation Core Connection
+# ------------------------------------------------------------------------------
+federation:
+  url: "${OMEGA_FEDERATION_URL:-http://localhost:9405}"
+  timeout_ms: 120000
+  max_retries: 3
+
+# ------------------------------------------------------------------------------
+# Tenant & Actor Identity
+# ------------------------------------------------------------------------------
+identity:
+  tenant_id: "${OMEGA_TENANT_ID}"
+  actor_id: "${OMEGA_ACTOR_ID}"
+
+# ------------------------------------------------------------------------------
+# KEON INTEGRATION SEAMS (STUBS)
+# ------------------------------------------------------------------------------
+# These sections are structural shells. When Keon evidence browser is ready,
+# drop in the verified configuration without refactoring this file.
+
+keon:
+  # --------------------------------------------------
+  # SEAM: Evidence Browser Connection
+  # --------------------------------------------------
+  # When wired:
+  #   - URL will point to Keon Control evidence browser
+  #   - SDK will fetch trust status before operations
+  #   - Dashboard links will be generated automatically
+  evidence_browser:
+    enabled: false  # STUB: Set true when Keon Control lands
+    url: "${KEON_EVIDENCE_BROWSER_URL:-}"
+    # refresh_interval_ms: 30000  # Uncomment when wired
+
+  # --------------------------------------------------
+  # SEAM: Receipt Threading
+  # --------------------------------------------------
+  # When wired:
+  #   - decision_receipt_id flows through all requests
+  #   - Governance state is tracked end-to-end
+  #   - Audit trail is immutable
+  governance:
+    require_receipts: false  # STUB: Set true for production
+    receipt_thread_header: "X-Keon-Receipt-Id"
+    policy_tags: []  # STUB: ["prod", "customer_facing"] when ready
+
+  # --------------------------------------------------
+  # SEAM: Trust Display
+  # --------------------------------------------------
+  # When wired:
+  #   - Trust level shown in CLI output
+  #   - Governance status embedded in responses
+  #   - Evidence links returned with results
+  trust_display:
+    show_trust_level: false  # STUB: Set true when TrustOps lands
+    show_evidence_links: false
+    show_governance_state: false
+
+# ------------------------------------------------------------------------------
+# Logging Configuration
+# ------------------------------------------------------------------------------
+logging:
+  level: INFO
+  format: "structured"
+  # When Keon is wired, correlation IDs will be logged automatically
+  include_correlation: true
+
+# ------------------------------------------------------------------------------
+# ASSUMPTIONS (Document what we assume while scaffolding)
+# ------------------------------------------------------------------------------
+#
+# 1. Keon Evidence Browser will expose a REST API at /api/v1/evidence/*
+# 2. Trust levels will be: NONE, LOW, MEDIUM, HIGH, VERIFIED
+# 3. Receipt IDs follow canonical format: t:<tenant>|r:<uuidv7>
+# 4. Evidence pack IDs follow canonical format: t:<tenant>|e:<uuidv7>
+# 5. Governance state is immutable once a receipt is issued
+#
+# If any assumption is wrong, this config needs corresponding updates.
+# ------------------------------------------------------------------------------
