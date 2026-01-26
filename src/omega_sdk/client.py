@@ -4,6 +4,8 @@ OMEGA SDK Client - Main entrypoint for developers.
 Provides a clean, ergonomic interface to the Federation Core API.
 """
 
+from __future__ import annotations
+
 from typing import Any, Optional
 from uuid import uuid4
 
@@ -26,6 +28,11 @@ from omega_sdk.models import (
     TaskGovernance,
     HealthStatus,
     StatusResponse,
+)
+from omega_sdk.evidence import (
+    MemoryEvidencePack,
+    EvidencePackListResponse,
+    EvidenceVerificationResult,
 )
 from omega_sdk.utils.correlation import make_correlation_id
 
@@ -399,6 +406,120 @@ class TasksNamespace:
         return Task.model_validate(data)
 
 
+class EvidenceNamespace:
+    """Evidence API namespace."""
+
+    def __init__(self, gateway: FederationCoreGateway, config: OmegaConfig):
+        self._gateway = gateway
+        self._config = config
+
+    async def list(
+        self,
+        tenant_id: Optional[str] = None,
+        actor_id: Optional[str] = None,
+        correlation_id: Optional[str] = None,
+        limit: int = 50,
+        cursor: Optional[str] = None,
+    ) -> EvidencePackListResponse:
+        """
+        List evidence packs.
+
+        Args:
+            tenant_id: Tenant ID (defaults to config)
+            actor_id: Actor ID (defaults to config)
+            correlation_id: Correlation ID (auto-generated if not provided)
+            limit: Page limit (default 50, max 200)
+            cursor: Pagination cursor
+
+        Returns:
+            Evidence pack list response
+        """
+        tenant_id = tenant_id or self._config.tenant_id or ""
+        actor_id = actor_id or self._config.actor_id or ""
+        correlation_id = correlation_id or make_correlation_id(tenant_id)
+
+        params: dict[str, Any] = {"limit": limit}
+        if correlation_id:
+            params["correlation_id"] = correlation_id
+        if cursor:
+            params["cursor"] = cursor
+
+        data = await self._gateway.get(
+            "/compliance/evidence-packs",
+            tenant_id=tenant_id,
+            actor_id=actor_id,
+            correlation_id=correlation_id,
+            params=params,
+        )
+
+        return EvidencePackListResponse.model_validate(data)
+
+    async def get(
+        self,
+        pack_hash: str,
+        tenant_id: Optional[str] = None,
+        actor_id: Optional[str] = None,
+        correlation_id: Optional[str] = None,
+    ) -> MemoryEvidencePack:
+        """
+        Get evidence pack details.
+
+        Args:
+            pack_hash: Evidence pack hash (or ID)
+            tenant_id: Tenant ID (defaults to config)
+            actor_id: Actor ID (defaults to config)
+            correlation_id: Correlation ID (auto-generated if not provided)
+
+        Returns:
+            Evidence pack details
+        """
+        tenant_id = tenant_id or self._config.tenant_id or ""
+        actor_id = actor_id or self._config.actor_id or ""
+        correlation_id = correlation_id or make_correlation_id(tenant_id)
+
+        data = await self._gateway.get(
+            f"/compliance/evidence-packs/{pack_hash}",
+            tenant_id=tenant_id,
+            actor_id=actor_id,
+            correlation_id=correlation_id,
+        )
+
+        return MemoryEvidencePack.model_validate(data)
+
+    async def verify(
+        self,
+        pack_hash: str,
+        tenant_id: Optional[str] = None,
+        actor_id: Optional[str] = None,
+        correlation_id: Optional[str] = None,
+    ) -> EvidenceVerificationResult:
+        """
+        Verify an evidence pack.
+
+        Args:
+            pack_hash: Evidence pack hash
+            tenant_id: Tenant ID (defaults to config)
+            actor_id: Actor ID (defaults to config)
+            correlation_id: Correlation ID (auto-generated if not provided)
+
+        Returns:
+            Verification result
+        """
+        tenant_id = tenant_id or self._config.tenant_id or ""
+        actor_id = actor_id or self._config.actor_id or ""
+        correlation_id = correlation_id or make_correlation_id(tenant_id)
+
+        data = await self._gateway.post(
+            f"/compliance/evidence-packs/{pack_hash}:verify",
+            tenant_id=tenant_id,
+            actor_id=actor_id,
+            correlation_id=correlation_id,
+            json={},
+        )
+
+        return EvidenceVerificationResult.model_validate(data)
+
+
 class OmegaClient:
     """
     Main OMEGA SDK client.
@@ -461,6 +582,7 @@ class OmegaClient:
         self.tools = ToolsNamespace(self._gateway, config)
         self.agents = AgentsNamespace(self._gateway, config)
         self.tasks = TasksNamespace(self._gateway, config)
+        self.evidence = EvidenceNamespace(self._gateway, config)
 
     @classmethod
     def from_env(cls) -> "OmegaClient":
