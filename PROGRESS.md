@@ -27,6 +27,7 @@ Per the KEON-OMEGA Empire Orchestrator-Governed Execution Plan v1.1:
 | Integration seams doc | ✅ Complete | `docs/KEON_INTEGRATION_SEAMS.md` |
 | Bug fix: missing import | ✅ Complete | `examples/list_tools.py` |
 | Progress tracking | ✅ Complete | `PROGRESS.md` (this file) |
+| Phase 4 Evidence Client | ✅ Complete | `src/omega/evidence/*` |
 
 ---
 
@@ -111,4 +112,14 @@ If another orchestrator or session needs to continue this work:
 
 ---
 
-*Progress file maintained by Claude (Orchestrator 4)*
+## Phase 4: Evidence Client (Directive Foxtrot)
+
+| Task | Status | Details |
+|------|--------|---------|
+| Evidence API Client | ✅ Complete | `get_evidence_pack`, `list_evidence`, `verify_evidence` |
+| Evidence Models | ✅ Complete | Read-only models mirroring Team Echo |
+| Integration Tests | ✅ Complete | Status handling + fail-closed behavior |
+
+---
+
+*Progress file maintained by Antigravity (Orchestrator Foxtrot)*
