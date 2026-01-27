@@ -7,6 +7,7 @@ This example demonstrates:
 - Error handling
 """
 
+import asyncio
 
 from omega_sdk import OmegaClient
 from omega_sdk.errors import OmegaError
