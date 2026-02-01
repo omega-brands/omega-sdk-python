@@ -9,7 +9,7 @@ across distributed systems with time-ordered UUIDs.
 
 import re
 from uuid import UUID
-from uuid7 import uuid7
+from uuid6 import uuid7
 
 
 # Canonical format: t:<tenant>|c:<uuidv7>

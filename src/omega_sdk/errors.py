@@ -291,10 +291,39 @@ def error_from_response(
     retryable = error_data.get("retryable", False)
 
     # Special handling for specific error types
-    if error_class == ValidationError and "field_errors" in details:
+    if error_class == ValidationError:
         return ValidationError(
             message=message,
-            field_errors=details["field_errors"],
+            field_errors=details.get("field_errors"),
+            correlation_id=correlation_id,
+            request_id=request_id,
+        )
+    elif error_class == AuthenticationError:
+        return AuthenticationError(
+            message=message,
+            details=details,
+            correlation_id=correlation_id,
+            request_id=request_id,
+        )
+    elif error_class == ForbiddenError:
+        return ForbiddenError(
+            message=message,
+            details=details,
+            correlation_id=correlation_id,
+            request_id=request_id,
+        )
+    elif error_class == NotFoundError:
+        return NotFoundError(
+            message=message,
+            resource_type=details.get("resource_type"),
+            resource_id=details.get("resource_id"),
+            correlation_id=correlation_id,
+            request_id=request_id,
+        )
+    elif error_class == ConflictError:
+        return ConflictError(
+            message=message,
+            details=details,
             correlation_id=correlation_id,
             request_id=request_id,
         )
@@ -313,8 +342,23 @@ def error_from_response(
             correlation_id=correlation_id,
             request_id=request_id,
         )
+    elif error_class == TimeoutError:
+        return TimeoutError(
+            message=message,
+            timeout_ms=details.get("timeout_ms"),
+            correlation_id=correlation_id,
+            request_id=request_id,
+        )
+    elif error_class == InternalError:
+        return InternalError(
+            message=message,
+            details=details,
+            correlation_id=correlation_id,
+            request_id=request_id,
+        )
     else:
-        return error_class(
+        # Fallback for OmegaError base class
+        return OmegaError(
             code=code,
             message=message,
             details=details,

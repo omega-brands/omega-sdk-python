@@ -2,7 +2,7 @@
 # KEON + OMEGA Integration Configuration Stub
 # ==============================================================================
 #
-# STATUS: SHELL - Ready for Keon evidence wiring
+# STATUS: EVIDENCE SHELL - Ready for Keon evidence wiring
 # MERGE AUTHORITY: None until Gemini clears Campaign II
 #
 # This configuration file defines the integration seams between OMEGA SDK
@@ -43,7 +43,7 @@ keon:
   # --------------------------------------------------
   # When wired:
   #   - URL will point to Keon Control evidence browser
-  #   - SDK will fetch trust status before operations
+  #   - SDK will fetch verification status before operations
   #   - Dashboard links will be generated automatically
   evidence_browser:
     enabled: false  # STUB: Set true when Keon Control lands
@@ -63,14 +63,14 @@ keon:
     policy_tags: []  # STUB: ["prod", "customer_facing"] when ready
 
   # --------------------------------------------------
-  # SEAM: Trust Display
+  # SEAM: Verification Status Display
   # --------------------------------------------------
   # When wired:
-  #   - Trust level shown in CLI output
+  #   - Verification status shown in CLI output
   #   - Governance status embedded in responses
   #   - Evidence links returned with results
-  trust_display:
-    show_trust_level: false  # STUB: Set true when TrustOps lands
+  verification_status_display:
+    show_verification_status: false  # STUB: Set true when TrustOps lands
     show_evidence_links: false
     show_governance_state: false
 
@@ -88,10 +88,15 @@ logging:
 # ------------------------------------------------------------------------------
 #
 # 1. Keon Evidence Browser will expose a REST API at /api/v1/evidence/*
-# 2. Trust levels will be: NONE, LOW, MEDIUM, HIGH, VERIFIED
+# 2. Verification verdict values will be: NONE, LOW, MEDIUM, HIGH, VERIFIED
 # 3. Receipt IDs follow canonical format: t:<tenant>|r:<uuidv7>
 # 4. Evidence pack IDs follow canonical format: t:<tenant>|e:<uuidv7>
-# 5. Governance state is immutable once a receipt is issued
+# 5. Evidence response includes explicit Keon fields:
+#    - verdict: verification verdict (NONE, LOW, MEDIUM, HIGH, VERIFIED)
+#    - kid: key identifier for verification (t:<tenant>|k:<uuidv7>)
+#    - verification_method: method used (e.g., cryptographic_signature)
+#    - verified_at: ISO 8601 timestamp of verification
+# 6. Governance state is immutable once a receipt is issued
 #
 # If any assumption is wrong, this config needs corresponding updates.
 # ------------------------------------------------------------------------------

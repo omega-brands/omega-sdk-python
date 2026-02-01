@@ -34,7 +34,7 @@ async def main():
             # --------------------------------------------------
             # KEON INTEGRATION SEAM
             # When Keon evidence browser is wired:
-            #   - Display trust status here
+            #   - Display verification status here
             #   - Show governance state
             #   - Link to evidence dashboard
             # --------------------------------------------------

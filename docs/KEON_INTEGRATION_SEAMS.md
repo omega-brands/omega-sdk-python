@@ -8,7 +8,7 @@
 ## Purpose
 
 This document identifies all integration points between the OMEGA SDK and Keon Core.
-These are **structural shells** that will be wired to verified truth once Keon Control
+These are **structural evidence shells** that will be wired to verified truth once Keon Control
 evidence browser exists.
 
 **This document prepares the world for Keon. It does NOT:**
@@ -185,13 +185,13 @@ if result.audit:
 
 ---
 
-## Seam 4: Trust Display (STUB)
+## Seam 4: Verification Status (STUB)
 
 **Location:** Not yet implemented
-**Status:** 🟡 STUB — Shell prepared, waiting for Keon Control
+**Status:** 🟡 STUB — Evidence shell prepared, waiting for Keon Control
 
 ### Planned Behavior
-- Display trust level in CLI output
+- Display verification status in CLI output
 - Show evidence links in responses
 - Embed governance state in results
 
@@ -199,8 +199,8 @@ if result.audit:
 ```yaml
 # keon_omega.yaml
 keon:
-  trust_display:
-    show_trust_level: false      # STUB: Set true when TrustOps lands
+  verification_status_display:
+    show_verification_status: false      # STUB: Set true when TrustOps lands
     show_evidence_links: false
     show_governance_state: false
 ```
@@ -211,15 +211,15 @@ $ omega invoke csv_processor --file data.csv
 ✓ Tool invocation successful
   Result: { ... }
 
-  Trust: VERIFIED ████████████ 100%
+  Verification: VERIFIED ████████████ 100%
   Evidence: https://keon.control/evidence/t:acme|e:01234567...
   Governance: compliant (receipt: t:acme|r:01234567...)
 ```
 
 ### Integration Contract
 When Keon Control lands:
-1. SDK will fetch trust status via `KEON_EVIDENCE_BROWSER_URL`
-2. Trust levels: `NONE`, `LOW`, `MEDIUM`, `HIGH`, `VERIFIED`
+1. SDK will fetch verification status via `KEON_EVIDENCE_BROWSER_URL`
+2. Verification levels: `NONE`, `LOW`, `MEDIUM`, `HIGH`, `VERIFIED`
 3. Evidence links follow format: `{KEON_BASE}/evidence/{evidence_pack_id}`
 4. Governance state is immutable once receipt is issued
 
@@ -249,8 +249,10 @@ keon:
 GET /api/v1/evidence/{evidence_pack_id}
 Response:
 {
-  "trust_level": "VERIFIED",
-  "created_at": "2025-01-25T12:00:00Z",
+  "verdict": "VERIFIED",
+  "kid": "t:acme|k:...",
+  "verification_method": "cryptographic_signature",
+  "verified_at": "2025-01-25T12:00:00Z",
   "correlation_id": "t:acme|c:...",
   "receipt_chain": [...],
   "artifacts": [...]
@@ -266,6 +268,21 @@ When Keon Control lands:
 
 ---
 
+## Keon Evidence Fields Reference
+
+When Keon Control evidence browser is wired, the following explicit evidence fields will be used:
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `verdict` | string | Verification verdict | `VERIFIED`, `HIGH`, `MEDIUM`, `LOW`, `NONE` |
+| `kid` | string | Key identifier for verification | `t:acme\|k:01234567-89ab-cdef-0123-456789abcdef` |
+| `verification_method` | string | Method used for verification | `cryptographic_signature`, `attestation`, `audit_trail` |
+| `verified_at` | string (ISO 8601) | Timestamp of verification | `2025-01-25T12:00:00Z` |
+
+These fields replace generic "trust signals" language with explicit, verifiable Keon evidence attributes.
+
+---
+
 ## Assumptions
 
 These assumptions are documented so they can be validated when Keon lands:
@@ -273,10 +290,11 @@ These assumptions are documented so they can be validated when Keon lands:
 | # | Assumption | Validation |
 |---|------------|------------|
 | 1 | Keon Evidence Browser exposes REST API at `/api/v1/evidence/*` | Check Keon Control API spec |
-| 2 | Trust levels are: NONE, LOW, MEDIUM, HIGH, VERIFIED | Verify against Keon Core enums |
+| 2 | Verification verdict values are: NONE, LOW, MEDIUM, HIGH, VERIFIED | Verify against Keon Core enums |
 | 3 | Receipt IDs follow format: `t:<tenant>\|r:<uuidv7>` | Validate against Keon SDK |
 | 4 | Evidence pack IDs follow format: `t:<tenant>\|e:<uuidv7>` | Validate against Keon SDK |
-| 5 | Governance state is immutable once a receipt is issued | Confirm Keon Core behavior |
+| 5 | Evidence response includes explicit fields: `verdict`, `kid`, `verification_method`, `verified_at` | Confirm Keon Core API contract |
+| 6 | Governance state is immutable once a receipt is issued | Confirm Keon Core behavior |
 
 If any assumption is wrong, update this document and corresponding config files.
 

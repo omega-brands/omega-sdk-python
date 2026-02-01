@@ -130,7 +130,7 @@ class FederationCoreGateway:
             raise OmegaError(
                 code="INVALID_RESPONSE",
                 message=f"Failed to parse JSON response: {e}",
-                retryable=False,
+                retryable=True,  # Malformed responses may be transient
             )
 
         # Validate envelope structure
