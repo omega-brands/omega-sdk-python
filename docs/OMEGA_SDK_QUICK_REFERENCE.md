@@ -331,6 +331,6 @@ Agent: [Your Name]
 **Quick Links**:
 - Directives: `D:\Repos\forgepilot\OMEGA_SDK_DIRECTIVE_V2.md`
 - Battle-tested utilities: `forgepilot-api/tests/helpers/federation_helpers.py`
-- OMEGA Doctrine: `D:\Repos\OMEGA\omega-docs\doctrine\`
+- OMEGA Doctrine: `D:\Repos\OMEGA\omega-docs\doctrine/`
 
 **Remember**: SDK is a **thin HTTP client**. Federation_core does the heavy lifting!

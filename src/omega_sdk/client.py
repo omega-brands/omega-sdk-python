@@ -34,6 +34,7 @@ from omega_sdk.evidence import (
     EvidencePackListResponse,
     EvidenceVerificationResult,
 )
+from omega_sdk.workflows import WorkflowsNamespace
 from omega_sdk.utils.correlation import make_correlation_id
 
 
@@ -583,6 +584,7 @@ class OmegaClient:
         self.agents = AgentsNamespace(self._gateway, config)
         self.tasks = TasksNamespace(self._gateway, config)
         self.evidence = EvidenceNamespace(self._gateway, config)
+        self.workflows = WorkflowsNamespace(self._gateway, config)
 
     @classmethod
     def from_env(cls) -> "OmegaClient":

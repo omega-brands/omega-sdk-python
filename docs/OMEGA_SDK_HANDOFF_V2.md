@@ -402,7 +402,7 @@ Your agent team now has:
 
 **Architecture Questions?**
 - Reference: `OMEGA_SDK_DIRECTIVE_V2.md`
-- Doctrine: `D:\Repos\OMEGA\omega-docs\doctrine\`
+- Doctrine: `D:\Repos\OMEGA\omega-docs\doctrine/`
 
 **Source Code Questions?**
 - Federation client: `forgepilot-api/app/clients/federation_client.py`

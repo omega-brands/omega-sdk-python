@@ -34,6 +34,17 @@ from omega_sdk.models import (
     Task,
     TaskStatus,
 )
+from omega_sdk.workflows import (
+    WorkflowRunStatus,
+    GateStatus,
+    GateInfo,
+    WorkflowRunLogEntry,
+    WorkflowRunOptions,
+    WorkflowRunResult,
+    ResumeRunResult,
+    WorkflowRegisterRequest,
+    WorkflowRegisterResult,
+)
 
 __all__ = [
     # Core client
@@ -55,4 +66,14 @@ __all__ = [
     "Tool",
     "Task",
     "TaskStatus",
+    # Workflow models
+    "WorkflowRunStatus",
+    "GateStatus",
+    "GateInfo",
+    "WorkflowRunLogEntry",
+    "WorkflowRunOptions",
+    "WorkflowRunResult",
+    "ResumeRunResult",
+    "WorkflowRegisterRequest",
+    "WorkflowRegisterResult",
 ]

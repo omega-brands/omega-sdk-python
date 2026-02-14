@@ -241,7 +241,7 @@ omega-sdk/
 
 ### Federation Core OpenAPI Spec
 
-**Source:** `D:\Repos\OMEGA\omega-core\services\federation_core\openapi\federation-core.v1.yaml`
+**Source:** `https://github.com/omega-brands/omega-core/services\federation_core\openapi\federation-core.v1.yaml`
 
 **Alignment:**
 - ✅ All endpoints covered
